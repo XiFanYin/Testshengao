@@ -136,12 +136,18 @@ public class DeviceUtils {
                     if (UsbManager.ACTION_USB_DEVICE_DETACHED.equals(action)) {
                         if (device != null && device.getVendorId() == vendorId && device.getProductId() == productId) {
                             callBack.Out();
+                            Log.e("rrrrrrrrr","身高体重仪拔出了");
+                        }else {
+                            Log.e("rrrrrrrrr","不是身高体重仪拔出了");
+                            callBack.OutErrorDevice();
                         }
                     } else if (UsbManager.ACTION_USB_DEVICE_ATTACHED.equals(action)) {
                         if (device != null && device.getVendorId() == vendorId && device.getProductId() == productId) {
                             callBack.In();
+                            Log.e("rrrrrrrrr","身高体重仪插入了");
                         } else {
                             callBack.InErrorDevice();
+                            Log.e("rrrrrrrrr","不是身高体重仪插入了");
                         }
 
                     }
@@ -162,6 +168,9 @@ public class DeviceUtils {
         void In();
 
         void InErrorDevice();
+
+
+        void OutErrorDevice();
 
     }
 

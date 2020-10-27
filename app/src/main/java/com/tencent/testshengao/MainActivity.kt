@@ -20,6 +20,8 @@ class MainActivity : AppCompatActivity() {
     var outLineDialog: AlertDialog? = null
     var lineDeviceErrorDialog: AlertDialog? = null
 
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -37,9 +39,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        stopDeviceListenerService()
-       //取消USB插入拔出广播
+        //取消USB插入拔出广播
         DeviceUtils.unregisterUSBReceiver(this);
+        stopDeviceListenerService()
+
     }
 
 
@@ -69,11 +72,16 @@ class MainActivity : AppCompatActivity() {
      */
     fun listenerUSBInOut() {
         DeviceUtils.monitorUSBInOut(this, object : DeviceUtils.OutInCallBack {
+            override fun OutErrorDevice() {
+                dismassErrorDiviceDialog()
+                showDeviceOutLineDialog()
+                stopDeviceListenerService()
+            }
+
             override fun Out() {
                 dismassErrorDiviceDialog()
                 showDeviceOutLineDialog()
                 stopDeviceListenerService()
-
             }
 
             override fun In() {
@@ -83,8 +91,8 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun InErrorDevice() {
+                dismassDeviceOutLineDialog()
                 showErrorDeviceDialog()
-
             }
         })
 
@@ -96,6 +104,7 @@ class MainActivity : AppCompatActivity() {
      * 显示设备不在线dialog
      */
     fun showDeviceOutLineDialog() {
+        outLineDialog?.dismiss()
         outLineDialog = AlertDialog.Builder(this)
             .setContentView(R.layout.outlinedialog)
             .setWidthAndHeight(dp2px(300F), dp2px(100F))
@@ -117,6 +126,7 @@ class MainActivity : AppCompatActivity() {
      * 提示用户插入设备不对的dialog
      */
     fun showErrorDeviceDialog() {
+        lineDeviceErrorDialog?.dismiss()
         lineDeviceErrorDialog = AlertDialog.Builder(this)
             .setContentView(R.layout.lineerrordialog)
             .setWidthAndHeight(dp2px(300F), dp2px(100F))
